@@ -231,6 +231,56 @@ class Trapezoide:public Integral{
     // ================================================
     // Fixed Precision 
     // ================================================
+    //Versione ottimizzata che tiene conto del calcolo precedente
+    virtual double calculate(const FunzioneBase &f) override{
+        double old_Int{};// Integrale per h/2
+        double h{(getB()-getA())/getPartition()};
+        double sum{(f.Eval(getA())+f.Eval(getB()))/2};
+        std::cout<< "Errore iniziale = " << getError() << '\n';
+        double Int{}; //Valore dell'integrale 
+        do{
+
+            old_Int=Int;                                  //Salvo la somma precedente
+            h = (getB()-getA())/getPartition();           //Dimezzo il passo h
+            for(unsigned int i{1};i<getPartition();i++){  //k sempre pari, quindi salto i=0
+                int A = (i%2 == 0) ? 0 : 1;              //I pari sono gia' presenti nella sommatoria
+                sum+= A*f.Eval(i*h);
+            }
+            Int=sum*h;
+            setError(4*fabs(Int-old_Int)/3); //Aggiorno il nuovo errore
+   
+            setPartition(2*getPartition());//raddoppio il numero di intervalli
+        
+        }while(getError()>getPrecision());
+        //return sum;
+        return (4*Int-old_Int)/3;
+    }
+
+    virtual double calculate(std::function<double(double)> f) override{
+        double old_Int{};// Integrale per h/2
+        double h{(getB()-getA())/getPartition()};
+        double sum{(f(getA())+f(getB()))/2};
+        std::cout<< "Errore iniziale = " << getError() << '\n';
+        double Int{}; //Valore dell'integrale 
+        do{
+
+            old_Int=Int;                                  //Salvo la somma precedente
+            h = (getB()-getA())/getPartition();           //Dimezzo il passo h
+            for(unsigned int i{1};i<getPartition();i++){  //k sempre pari, quindi salto i=0
+                int A = (i%2 == 0) ? 0 : 1;               //I pari sono gia' presenti nella sommatoria
+                sum+= A*f(i*h);
+            }
+            Int=sum*h;
+            setError(4*fabs(Int-old_Int)/3);              //Aggiorno il nuovo errore
+   
+            setPartition(2*getPartition());               //raddoppio il numero di intervalli
+        
+        }while(getError()>getPrecision());
+        //return sum;
+        return (4*Int-old_Int)/3;
+    }
+    
+    /*
     virtual double calculate(const FunzioneBase &f) override{
         double old_sum{};
         double sum{calculate(getPartition(),f)};
@@ -256,5 +306,5 @@ class Trapezoide:public Integral{
         }while(getError()>getPrecision());
 
         return (4*sum-old_sum)/3;
-    }
+    }*/
 };
