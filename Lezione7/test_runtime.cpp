@@ -19,7 +19,7 @@ int main(){
     std::vector<double>error(prec.size());//Ordinate
 
     Gnuplot plt;
-    plt.redirect_to_png("Real_error.png","800,600");
+    plt.redirect_to_png("Runtime_error.png","800,600");
     plt.set_logscale(Gnuplot::AxisScale::LOGXY);
     plt.set_xlabel("Precisione impostata");
     plt.set_ylabel("Precisione ottenuta");
@@ -27,8 +27,8 @@ int main(){
 
     for(unsigned int i{};i<error.size();i++){
         appo =m.integrate(a,b,sin,k,prec[i],true);
-        //error[i]=m.getError();
-        error[i]= fabs(appo-2.);
+        error[i]=m.getError();
+        //error[i]= fabs(appo-2.);
         //fmt::print("#{} {}\n",i,appo);
     }
 
@@ -37,18 +37,18 @@ int main(){
 
     for(unsigned int i{};i<error.size();i++){
         appo = s.integrate(a,b,sin,k,prec[i],true);
-        //error[i]=s.getError();
-        error[i]= fabs(appo-2.);
-        //fmt::print("#{} {}\n",i,appo);
+        error[i]=s.getError();
+        //error[i]= fabs(appo-2.);
+        fmt::print("#{} {}\n",i,s.getError());
     }
 
     plt.plot(prec,error,"Simpson",Gnuplot::LineStyle::LINESPOINTS);
 
     for(unsigned int i{};i<error.size();i++){
         appo = t.integrate(a,b,sin,k,prec[i],true);
-        //error[i]=t.getError();
-        error[i]= fabs(appo-2.);
-        //fmt::print("#{} {}\n",i,appo);
+        error[i]=t.getError();
+        //error[i]= fabs(appo-2.);
+        //fmt::print("#{} {}\n",i,t.getError());
     }
 
     plt.plot(prec,error,"Trapezoide",Gnuplot::LineStyle::LINESPOINTS);
