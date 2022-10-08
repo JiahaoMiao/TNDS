@@ -17,10 +17,9 @@ class Vettore{
     // =============================================
     // Get methods
     // =============================================
-    size_t GetN() const{
-    return m_N;
-    }
+    size_t GetN() const{return m_N;}
     double GetComponent(size_t)const;
+    double* data(){return m_v;};
 
     // =============================================
     // Set methods
@@ -36,7 +35,7 @@ class Vettore{
     
     Vettore& operator=(Vettore&& V); //move assignment operator
 
-
+    
     private:
     size_t m_N;
     double* m_v;
